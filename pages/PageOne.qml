@@ -51,8 +51,7 @@ Flickable {
 
 
         };
-//        http.open('GET',"https://vkguptamantra.herokuapp.com/api/users/");
-          http.open('GET', "http://localhost:3000/api/users");
+        http.open('GET',"https://vkguptamantra.herokuapp.com/api/users/");
         http.send();
     }
 
@@ -85,7 +84,7 @@ Flickable {
                     fillMode: Image.PreserveAspectFit
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    source: "https://vkguptamantra.herokuapp.com/images/Mantra1.png"
+                    source: getImage_url()
                 }
             }
             HorizontalDivider {}

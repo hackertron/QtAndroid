@@ -6,7 +6,8 @@
 #include <QSqlDatabase>
 #include <QSqlDriver>
 #include <QStandardPaths>
-
+#include <QHash>
+#include <QTime>
 
 
 
@@ -70,6 +71,73 @@ void dbmanager::subscribe_db(QString server_id, QString email)
           }
 }
 
+QString dbmanager::getid()
+{
+    QString db_path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
+    QString id = "";
+
+    qDebug() << db_path;
+    QDir dir(db_path);
+    dir.cd("MANTRA_appdata");
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//not dbConnection
+       db.setDatabaseName(dir.absoluteFilePath("MANTRA.db"));
+       if(!db.open())
+       {
+           qDebug() <<"error in opening DB";
+       }
+       else
+       {
+           qDebug() <<"connected to DB" ;
+
+       }
+       QSqlQuery query;
+       query.prepare("SELECT server_id FROM User WHERE ID = 1");
+       id = query.value(0).toString();
+       return id;
+
+}
+
+QString return_diff(QHash<QString, QString> mantra)
+{
+    QTime sys_time;
+    QHash<QString, QTime>result;
+        sys_time =  QTime::currentTime();
+    QHashIterator<QString, QString> i(mantra);
+    while(i.hasNext())
+    {
+        QString server_timeID = i.key();
+        QString server_time = i.value();
+        QStringList splitted_time = server_time.split(":");
+
+        QString hrs = splitted_time.at(0);
+        QString min = splitted_time.at(1);
+        int int_hrs =hrs.toInt();
+        int int_min = min.toInt();
+        QTime notify_time(int_hrs,int_min,0,0);
+        if(notify_time >= sys_time)
+        {
+            result.insert(server_timeID,notify_time);
+        }
+
+    }
+    QString image;
+    QHashIterator<QString, QTime> j(result);
+    QTime min(0,0,0,0);
+    while(j.hasNext())
+    {
+        if(j.value() < min)
+        {
+            image = j.key();
+        }
+    }
+
+
+    return image;
+
+
+}
+
 QString dbmanager::getImage_url()
 {
     QString db_path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
@@ -91,17 +159,33 @@ QString dbmanager::getImage_url()
 
        }
        QSqlQuery query;
+       QString image;
 
        query.prepare("SELECT email from User where ID = 1");
 
-       if(query.exec())
+
+       if(query.exec() && (query.size() > 0 || query.size() != -1))
        {
           qDebug() << "done";
+          email = query.value(0).toString();
+          QHash<QString, QString> mantra;
+          query.prepare("SELECT mantra_type time FROM Mantra WHERE enabled = true AND email = '" + email + "'");
+          while(query.next())
+          {
+              mantra.insert(query.value(0).toString(),query.value(0).toString());
+          }
+
+          image = return_diff(mantra);
 
        }
-       query.prepare("SELECT mantra_type FROM Mantra WHERE enabled = true AND ");
+       else
+       {
+           image = "Mantra1.png";
+       }
+       image = dir.absolutePath() + "/" + image;
 
-       return email;
+
+       return image;
 
 }
 

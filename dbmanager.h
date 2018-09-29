@@ -23,6 +23,7 @@ public:
     // db functions
     Q_INVOKABLE void subscribe_db(QString server_id, QString email);
     Q_INVOKABLE QString getImage_url();
+    Q_INVOKABLE QString getid();
 
 
 signals:

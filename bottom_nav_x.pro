@@ -38,13 +38,11 @@ OTHER_FILES += images/black/*.png \
     images/white/x18/*.png \
     images/white/x36/*.png \
     images/white/x48/*.png \
-    translations/*.* \
     images/LICENSE \
     LICENSE \
     *.md
 
 RESOURCES += \
-    translations.qrc \
     qml.qrc \
     images.qrc
 
@@ -92,6 +90,7 @@ DISTFILES += \
     android/res/values/libs.xml \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat
+    android/gradlew.bat \
+    android/AndroidManifest.xml
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

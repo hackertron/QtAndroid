@@ -31,11 +31,16 @@ class QtAndroidNotifications {
         Intent resultIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
+
         PendingIntent resultPendingIntent =
             PendingIntent.getActivity(
             context, 0,
             resultIntent, PendingIntent.FLAG_UPDATE_CURRENT
         );
+        AlarmManager alarmManager = (AlarmManager)QtNative.activity().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, /*futureInMilliseconds*/0, pendingIntent);
+
+
 
         builder.setContentIntent(resultPendingIntent);
         notificationManager.notify(id, builder.build());

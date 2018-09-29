@@ -44,7 +44,7 @@ Flickable {
     {
         var data = {};
         data.email = emailID;
-        data.password = "temp_pass";
+        //data.password = "temp_pass";
         var json = JSON.stringify(data);
         console.log(json);
 
